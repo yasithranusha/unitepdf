@@ -1,4 +1,4 @@
-# PDF Merger
+# UnitePDF
 
 A modern, browser-based PDF merging tool that allows you to combine multiple PDF files into a single document with support for duplex printing optimization.
 
@@ -31,8 +31,8 @@ A modern, browser-based PDF merging tool that allows you to combine multiple PDF
 
 1. Clone the repository:
 ```bash
-git clone https://github.com/yourusername/proj-pdf.git
-cd proj-pdf
+git clone https://github.com/yourusername/unitepdf.git
+cd unitepdf
 ```
 
 2. Install dependencies:
@@ -218,7 +218,7 @@ We welcome contributions! Please follow these guidelines:
 
 If you encounter any issues or have questions:
 
-1. Check existing [Issues](https://github.com/yourusername/proj-pdf/issues)
+1. Check existing [Issues](https://github.com/yourusername/unitepdf/issues)
 2. Create a new issue with detailed information
 3. Provide sample PDFs (if relevant) to reproduce the problem
 
