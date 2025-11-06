@@ -1,0 +1,9 @@
+# Handle PDF files as binary
+*.pdf binary
+
+# Don't show PDF diffs (they're binary files)
+*.pdf -diff
+
+# Ensure test fixtures are tracked in git
+tests/fixtures/*.pdf binary
+tests/fixtures/*.pdf -diff
