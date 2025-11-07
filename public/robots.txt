@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dist/
 Disallow: /node_modules/
 
-Sitemap: https://unitepdf.app/sitemap.xml
+Sitemap: https://unitepdf.vercel.app/sitemap.xml
