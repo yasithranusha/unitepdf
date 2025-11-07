@@ -23,12 +23,34 @@ dist-ssr
 *.sln
 *.sw?
 
-# Test outputs (but keep test fixtures)
+# Test outputs (but keep test fixtures and baseline screenshots)
 test-results/
 playwright-report/
+blob-report/
+playwright/.cache/
 *.test.pdf
 *-output.pdf
 *-merged.pdf
+
+# Vitest coverage reports
+coverage/
+.nyc_output/
+
+# Playwright traces and videos
+trace.zip
+test-results/
+playwright/.auth/
+.playwright-mcp/
+
+# Screenshot test outputs (all screenshots ignored - generated locally/CI)
+*.png
+*-actual.png
+*-diff.png
+tests/**/__diff_output__/
+tests/**/__screenshots__/
+
+# Vitest browser mode cache
+.vitest/
 
 # Keep test fixtures
 !tests/fixtures/*.pdf

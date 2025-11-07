@@ -4,13 +4,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Purpose
 
-**PDF Merger** - An open source web application for merging multiple PDF files into a single PDF document.
+**UnitePDF** - An open source web application for merging multiple PDF files optimized for duplex printing.
 
 ### Key Features
 
 1. **PDF Merging**: Combine multiple PDF files into one output file
-2. **Duplex Printing Support**: Optional feature that automatically adds blank pages to PDFs with odd page counts to ensure proper duplex (double-sided) printing
-3. **Browser-based**: No server-side processing required - all PDF operations happen in the browser
+2. **Duplex Printing Support**: Automatically adds blank pages to PDFs with odd page counts to ensure proper duplex (double-sided) printing
+3. **PDF Previews**: View the first page of each PDF before merging with thumbnail previews
+4. **Page Count Tracking**: See individual page counts for each PDF and total pages (adjusted for duplex mode)
+5. **File Size Information**: Track individual file sizes, total size, and merged PDF size
+6. **Drag-and-Drop Reordering**: Rearrange PDFs in your desired sequence
+7. **Browser-based**: No server-side processing required - all PDF operations happen in the browser
+8. **SEO Optimized**: Comprehensive meta tags and structured data for search engine visibility
 
 ### Development Philosophy
 
@@ -27,7 +32,10 @@ This is a React + TypeScript + Vite project using:
 - **Styling**: Tailwind CSS v4 (latest major version)
 - **UI Components**: shadcn/ui (New York style variant)
 - **Package Manager**: pnpm
-- **PDF Library**: pdf-lib (installed as dev dependency)
+- **PDF Libraries**:
+  - pdf-lib (for PDF manipulation and merging)
+  - pdfjs-dist (for PDF preview generation)
+- **CI/CD**: GitHub Actions workflow for automated testing
 
 ## Development Commands
 
@@ -44,17 +52,35 @@ pnpm lint
 # Preview production build
 pnpm preview
 
-# Run unit tests (once configured)
+# Run tests in watch mode (default)
 pnpm test
 
-# Run unit tests in watch mode
-pnpm test:watch
+# Run tests once (CI mode)
+pnpm test:run
 
-# Run E2E tests with Playwright
+# Run tests with UI
+pnpm test:ui
+
+# Run tests with coverage
+pnpm test:coverage
+
+# Run browser mode tests (requires @vitest/browser + playwright)
+pnpm test:browser
+
+# Run Playwright E2E tests
 pnpm test:e2e
 
-# Run all tests
-pnpm test:all
+# Run Playwright visual regression tests
+pnpm test:visual
+
+# Update visual test snapshots
+pnpm test:visual:update
+
+# Run Playwright tests with UI mode (interactive)
+pnpm test:e2e:ui
+
+# View Playwright test report
+pnpm test:report
 
 # Regenerate test PDF fixtures
 node scripts/generate-test-pdfs.js
@@ -66,15 +92,30 @@ This project uses a comprehensive testing strategy:
 
 ### Testing Stack
 
-- **Unit/Integration Tests**: Vitest (recommended for Vite projects)
+- **Unit/Integration Tests**: Vitest with jsdom
   - Fast, Vite-native test runner
-  - Compatible with Vite's configuration and plugins
+  - jsdom environment for DOM testing
+  - Global test APIs enabled (describe, it, expect)
   - Jest-compatible API
 
+- **Component Tests**: Vitest Browser Mode (optional)
+  - Real browser testing with Playwright
+  - `vitest-browser-react` for React component rendering
+  - Actual browser APIs and user interactions
+  - Install with: `pnpm add -D @vitest/browser playwright vitest-browser-react`
+
 - **E2E Tests**: Playwright
-  - Browser automation for testing the complete user workflow
-  - Cross-browser testing support
-  - Visual regression testing capabilities
+  - End-to-end testing with real browsers
+  - Cross-browser testing (Chromium, Firefox, WebKit)
+  - Mobile and tablet viewport testing
+  - Automatic waiting and retry mechanisms
+
+- **Visual Regression Tests**: Playwright Screenshots
+  - Pixel-perfect UI validation
+  - Screenshot comparison against baselines
+  - Detect unintended visual changes
+  - Cross-browser visual consistency
+  - Responsive design validation
 
 ### Test Structure
 
@@ -87,12 +128,18 @@ tests/
 │   ├── 5-pages.pdf  # 5 pages (odd) - ~2 KB
 │   ├── 10-pages.pdf # 10 pages (even) - ~4 KB
 │   └── README.md    # Documentation for fixtures
-├── unit/            # Unit tests for utilities and hooks (to be created)
-├── integration/     # Integration tests for components (to be created)
-└── e2e/            # Playwright E2E tests (to be created)
+├── unit/            # Unit tests for utilities (jsdom)
+│   └── utils.test.ts
+├── browser/         # Browser mode tests for React components
+│   └── button.browser.test.tsx
+├── visual/          # Playwright visual regression tests
+│   └── homepage.visual.spec.ts
+└── example.test.ts  # Basic test example
 
 scripts/
 └── generate-test-pdfs.js  # Script to regenerate test fixtures
+
+playwright.config.ts         # Playwright configuration
 ```
 
 ### Test PDF Fixtures
@@ -127,6 +174,77 @@ This design allows you to:
 - Verifying page counts in merged PDFs
 - Creating and testing blank pages
 
+### Running Different Test Types
+
+**Unit Tests (jsdom)**: Default mode for utility and logic testing
+```bash
+pnpm test              # Watch mode
+pnpm test:run          # Single run
+```
+
+**Browser Mode Tests**: For React components in real browsers
+```bash
+# First install browser dependencies:
+pnpm add -D @vitest/browser playwright vitest-browser-react
+
+# Uncomment browser config in vite.config.ts
+
+# Run browser tests:
+pnpm test:browser
+```
+
+**Test Coverage**: Generate coverage reports
+```bash
+pnpm test:coverage
+```
+
+**UI Mode**: Interactive test UI
+```bash
+pnpm test:ui
+```
+
+**Visual Regression Tests**: Playwright screenshot comparison
+```bash
+# Run visual tests
+pnpm test:visual
+
+# Update baseline screenshots
+pnpm test:visual:update
+
+# View HTML report with screenshot diffs
+pnpm test:report
+
+# Run in UI mode (interactive)
+pnpm test:e2e:ui
+```
+
+## Claude Agents
+
+This project includes specialized Claude agents in `.claude/agents/`:
+
+### Visual QA Engineer (`visual-qa-engineer.md`)
+Specialized in visual testing and UI validation using Playwright:
+- Screenshot comparison and visual regression testing
+- Cross-browser and responsive design validation
+- Accessibility visual checks (focus indicators, color contrast)
+- Component state testing (hover, focus, disabled, loading)
+- Automated baseline screenshot generation
+
+**Use this agent when:**
+- Adding new UI components that need visual validation
+- Checking for unintended visual changes
+- Validating responsive design across viewports
+- Testing dark/light mode consistency
+- Verifying accessibility visual requirements
+
+### Playwright Test Agents
+Generated by Playwright MCP integration:
+- `playwright-test-generator.md` - Generate E2E tests
+- `playwright-test-healer.md` - Fix failing tests automatically
+- `playwright-test-planner.md` - Plan comprehensive test coverage
+
+**Invoke agents:** Use the Task tool or `/agent <name>` command
+
 ## Architecture
 
 ### Project Structure
@@ -156,27 +274,48 @@ scripts/
 └── generate-test-pdfs.js  # Generate test PDF fixtures
 ```
 
-**Planned structure for implementation:**
+**Implemented structure:**
 ```
 src/
 ├── components/
-│   ├── ui/                  # shadcn/ui components
-│   ├── PdfUploader.tsx      # Component for selecting/uploading PDFs
-│   ├── PdfMerger.tsx        # Main PDF merging component
-│   └── DuplexOptions.tsx    # Duplex printing configuration
+│   ├── ui/                  # shadcn/ui components (button, card, badge, etc.)
+│   ├── Header.tsx           # Application header with GitHub link
+│   ├── PdfUploader.tsx      # Component for uploading PDFs with drag-and-drop
+│   ├── PdfFileGrid.tsx      # Grid display with previews, page counts, drag-to-reorder
+│   ├── DuplexToggle.tsx     # Toggle for duplex printing mode
+│   └── MergeButton.tsx      # Button with progress indicator
 ├── lib/
 │   ├── utils.ts             # General utilities (cn, etc.)
-│   ├── pdf-utils.ts         # PDF manipulation utilities
-│   └── duplex-utils.ts      # Duplex printing logic
-├── hooks/
-│   └── usePdfMerge.ts       # Hook for PDF merging logic
-└── types/
-    └── pdf.ts               # PDF-related type definitions
+│   ├── pdfUtils.ts          # PDF manipulation utilities (merge, download)
+│   └── pdfPreview.ts        # PDF preview generation using pdfjs-dist
+└── App.tsx                  # Main application with state management
 
 tests/
-├── unit/             # Unit tests for utilities
-├── integration/      # Component integration tests
-└── e2e/             # Playwright E2E tests
+├── unit/                    # Unit tests for utilities
+│   ├── pdfUtils.test.ts
+│   ├── utils.test.ts
+│   ├── PdfUploader.test.tsx
+│   ├── PdfFileList.test.tsx
+│   ├── DuplexToggle.test.tsx
+│   └── MergeButton.test.tsx
+├── browser/                 # Vitest browser mode tests
+│   └── button.browser.test.tsx
+├── e2e/                     # Playwright E2E tests
+│   ├── README.md
+│   ├── TESTPLAN.md
+│   ├── TEST_SCENARIOS.md
+│   ├── PLAYWRIGHT_IMPLEMENTATION_GUIDE.md
+│   ├── TEST_FLOW_DIAGRAMS.md
+│   ├── unite-pdf-happy-path.spec.ts
+│   └── duplex-mode-calculations.spec.ts
+├── fixtures/                # Test PDF files
+│   ├── 1-page.pdf
+│   ├── 2-pages.pdf
+│   ├── 3-pages.pdf
+│   ├── 5-pages.pdf
+│   ├── 10-pages.pdf
+│   └── README.md
+└── example.test.ts
 ```
 
 ### Path Aliases
@@ -280,3 +419,70 @@ Type checking is performed during build but not during development. To type-chec
 ```bash
 pnpm exec tsc -b
 ```
+
+## CI/CD with GitHub Actions
+
+The project includes a comprehensive CI/CD workflow that runs on every push and pull request to the `main` branch.
+
+### Workflow Configuration
+
+**File**: `.github/workflows/ci.yml`
+
+**Pipeline Steps:**
+1. Install dependencies with pnpm
+2. Install Playwright chromium browser
+3. Run unit tests (55 tests via Vitest)
+4. Build production bundle
+5. Start development server
+6. Run E2E tests (4 tests via Playwright)
+7. Upload test reports as artifacts
+
+**Test Coverage:**
+- ✅ 55 unit tests (components and utilities)
+- ✅ 4 E2E tests (happy path + duplex calculations)
+- ✅ Runs on Ubuntu latest
+- ✅ 60-minute timeout
+- ✅ Chromium-only for fast CI execution
+
+### Running Tests Locally
+
+```bash
+# Run all unit tests
+pnpm test:run
+
+# Run E2E tests (chromium only)
+pnpm test:e2e
+
+# Run E2E tests with UI mode
+pnpm test:e2e:ui
+```
+
+## SEO Implementation
+
+The application includes comprehensive SEO optimization:
+
+### Meta Tags (index.html)
+- Primary meta tags with targeted keywords
+- Open Graph tags for social media sharing
+- Twitter Card tags
+- Canonical URL
+- robots.txt and sitemap.xml
+
+### Structured Data (JSON-LD)
+- Schema.org WebApplication markup
+- Feature list
+- Free pricing information
+- Organization details
+
+### Content Optimization
+- Keyword-rich headings and descriptions
+- Comprehensive feature documentation
+- Use case examples
+- Step-by-step instructions
+
+**Target Keywords:**
+- merge pdf for duplex printing
+- combine pdf duplex
+- add blank page odd pages pdf
+- pdf duplex printing tool
+- merge pdf add blank pages

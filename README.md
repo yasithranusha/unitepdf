@@ -1,14 +1,29 @@
 # UnitePDF
 
-A modern, browser-based PDF merging tool that allows you to combine multiple PDF files into a single document with support for duplex printing optimization.
+[**Live Demo**](https://your-live-demo-url.com) | [GitHub Repository](https://github.com/yourusername/unitepdf)
+
+Merge PDF files for duplex printing with this modern, browser-based PDF merging tool. UnitePDF allows you to combine multiple PDF files into a single document with support for duplex printing optimization.
+
+## Why UnitePDF?
+
+-   **✅ 100% Free & Open Source**: No hidden costs or subscriptions.
+-   **🔒 Privacy-First**: All processing is done in your browser. Your files never touch a server.
+-   **🚀 No Installation**: Works directly in your web browser.
+-   **📄 Duplex Printing Perfected**: Automatically adds blank pages to ensure your double-sided printing works flawlessly. Use our tool to merge PDF for duplex printing.
+-   **Modern & Simple**: A clean, intuitive interface that's easy to use.
 
 ## Features
 
 - 🔄 **Merge Multiple PDFs**: Combine multiple PDF files into one document
 - 📄 **Duplex Printing Support**: Automatically add blank pages to PDFs with odd page counts for proper double-sided printing
+- 🖼️ **PDF Previews**: View thumbnails of the first page of each PDF before merging
+- 📊 **Page Count Tracking**: See individual and total page counts, automatically adjusted for duplex mode
+- 💾 **File Size Information**: Track individual file sizes, total size before merge, and final merged PDF size
+- 🎯 **Drag-and-Drop Reordering**: Easily rearrange PDFs in your desired sequence
 - 🌐 **100% Browser-Based**: All processing happens in your browser - no server uploads required
 - 🎨 **Modern UI**: Built with React and Tailwind CSS for a clean, responsive interface
 - 🔒 **Privacy-First**: Your files never leave your device
+- 🔍 **SEO Optimized**: Comprehensive meta tags and structured data for search visibility
 
 ## Tech Stack
 
@@ -16,8 +31,11 @@ A modern, browser-based PDF merging tool that allows you to combine multiple PDF
 - **Build Tool**: Vite (via Rolldown)
 - **Styling**: Tailwind CSS v4
 - **UI Components**: shadcn/ui
-- **PDF Library**: pdf-lib (for browser-based PDF manipulation)
+- **PDF Libraries**:
+  - pdf-lib (for PDF merging and manipulation)
+  - pdfjs-dist (for PDF preview generation)
 - **Testing**: Vitest + Playwright
+- **CI/CD**: GitHub Actions
 - **Package Manager**: pnpm
 
 ## Installation
@@ -75,17 +93,32 @@ pnpm lint
 # Type check
 pnpm exec tsc -b
 
-# Run unit tests
+# Run tests in watch mode
 pnpm test
 
-# Run unit tests in watch mode
-pnpm test:watch
+# Run tests once (CI mode)
+pnpm test:run
 
-# Run E2E tests
+# Run tests with coverage
+pnpm test:coverage
+
+# Run tests with interactive UI
+pnpm test:ui
+
+# Run browser mode tests (requires additional setup)
+pnpm test:browser
+
+# Run Playwright E2E tests
 pnpm test:e2e
 
-# Run all tests
-pnpm test:all
+# Run visual regression tests
+pnpm test:visual
+
+# Update visual test baselines
+pnpm test:visual:update
+
+# View test report
+pnpm test:report
 
 # Regenerate test PDF fixtures (if needed)
 node scripts/generate-test-pdfs.js
@@ -95,39 +128,112 @@ node scripts/generate-test-pdfs.js
 
 ```
 src/
-├── components/        # React components
-│   ├── ui/           # shadcn/ui components
-│   ├── PdfUploader/  # PDF upload component
-│   └── PdfMerger/    # Main merging logic
-├── lib/              # Utility functions
-│   ├── pdf-utils/    # PDF manipulation utilities
-│   └── duplex-utils/ # Duplex printing logic
-├── hooks/            # Custom React hooks
-└── types/            # TypeScript type definitions
+├── components/          # React components
+│   ├── ui/             # shadcn/ui components (button, card, badge, etc.)
+│   ├── Header.tsx      # App header with GitHub link
+│   ├── PdfUploader.tsx # PDF upload with drag-and-drop
+│   ├── PdfFileGrid.tsx # Grid with previews and reordering
+│   ├── DuplexToggle.tsx # Duplex mode toggle
+│   └── MergeButton.tsx  # Merge button with progress
+├── lib/                # Utility functions
+│   ├── utils.ts        # General utilities
+│   ├── pdfUtils.ts     # PDF manipulation (merge, download)
+│   └── pdfPreview.ts   # PDF preview generation
+├── App.tsx             # Main app with state management
+└── index.css           # Global styles and theme
 
 tests/
-├── unit/             # Unit tests
-├── integration/      # Integration tests
-├── e2e/             # End-to-end tests
-└── fixtures/        # Sample PDF files for testing
+├── unit/               # Unit tests (55 tests)
+│   ├── pdfUtils.test.ts
+│   ├── PdfUploader.test.tsx
+│   ├── DuplexToggle.test.tsx
+│   └── MergeButton.test.tsx
+├── browser/            # Vitest browser tests
+│   └── button.browser.test.tsx
+├── e2e/               # Playwright E2E tests (4 tests)
+│   ├── unite-pdf-happy-path.spec.ts
+│   ├── duplex-mode-calculations.spec.ts
+│   ├── README.md
+│   ├── TESTPLAN.md
+│   └── TEST_SCENARIOS.md
+└── fixtures/          # Sample PDF files for testing
+    ├── 1-page.pdf
+    ├── 2-pages.pdf
+    ├── 3-pages.pdf
+    ├── 5-pages.pdf
+    └── 10-pages.pdf
+
+.github/
+└── workflows/
+    └── ci.yml         # GitHub Actions CI/CD
 ```
 
 ## Testing
 
-This project follows **Test-Driven Development (TDD)** principles.
+This project follows **Test-Driven Development (TDD)** principles using **Vitest**.
+
+### Testing Stack
+
+- **Vitest** - Fast, Vite-native test runner
+- **jsdom** - DOM environment for unit/integration tests
+- **Vitest Browser Mode** - Real browser testing with Playwright
+- **Playwright** - E2E and visual regression testing
+- **pdf-lib** - PDF manipulation and verification in tests
 
 ### Running Tests
 
 ```bash
-# Unit tests
+# Run tests in watch mode
 pnpm test
 
-# E2E tests
-pnpm test:e2e
+# Run tests once (for CI)
+pnpm test:run
 
-# All tests
-pnpm test:all
+# Generate coverage reports
+pnpm test:coverage
+
+# Interactive test UI
+pnpm test:ui
 ```
+
+### Browser Mode (Optional)
+
+For testing React components in real browsers:
+
+```bash
+# Install browser mode dependencies
+pnpm add -D @vitest/browser playwright vitest-browser-react
+
+# Uncomment browser config in vite.config.ts
+
+# Run browser tests
+pnpm test:browser
+```
+
+### Visual Regression Testing
+
+UnitePDF uses Playwright for visual regression testing to ensure pixel-perfect UI:
+
+```bash
+# Run visual tests (compares screenshots against baselines)
+pnpm test:visual
+
+# First time setup: Generate baseline screenshots
+pnpm test:visual:update
+
+# View visual diff reports
+pnpm test:report
+
+# Run in UI mode (interactive debugging)
+pnpm test:e2e:ui
+```
+
+**What gets tested:**
+- Homepage at different viewports (mobile, tablet, desktop)
+- Component states (default, hover, focus)
+- Dark/light mode consistency
+- Keyboard navigation focus indicators
+- Cross-browser rendering (Chromium, Firefox, WebKit)
 
 ### Test Fixtures
 
@@ -201,9 +307,14 @@ We welcome contributions! Please follow these guidelines:
 ## Roadmap
 
 - [x] Basic PDF merging functionality
-- [ ] Duplex printing support with blank page insertion
-- [ ] Drag-and-drop file reordering
-- [ ] PDF preview before merging
+- [x] Duplex printing support with blank page insertion
+- [x] Drag-and-drop file reordering
+- [x] PDF preview before merging
+- [x] Page count tracking for each PDF
+- [x] File size information display
+- [x] SEO optimization
+- [x] Comprehensive E2E testing
+- [x] GitHub Actions CI/CD
 - [ ] Page range selection for each PDF
 - [ ] Dark mode support
 - [ ] Internationalization (i18n)

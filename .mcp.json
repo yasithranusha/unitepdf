@@ -1,10 +1,10 @@
 {
   "mcpServers": {
-    "shadcn": {
+    "playwright-test": {
       "command": "npx",
       "args": [
-        "shadcn@latest",
-        "mcp"
+        "playwright",
+        "run-test-mcp-server"
       ]
     }
   }
