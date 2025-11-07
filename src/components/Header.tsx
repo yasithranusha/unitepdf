@@ -1,5 +1,6 @@
-import { Github, FileText } from "lucide-react";
+import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { LogoIcon } from "@/components/Logo";
 
 export function Header() {
   return (
@@ -7,9 +8,7 @@ export function Header() {
       <div className="container mx-auto px-4 md:px-8 flex h-16 items-center justify-between">
         {/* Logo and Title */}
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-gradient-to-br from-primary/20 to-accent/20 border border-primary/20">
-            <FileText className="h-6 w-6 text-primary" />
-          </div>
+          <LogoIcon size={40} className="rounded-lg shadow-sm" />
           <div>
             <h1 className="text-xl font-bold bg-gradient-to-r from-primary to-primary/70 bg-clip-text text-transparent">
               UnitePDF

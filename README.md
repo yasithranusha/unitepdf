@@ -1,7 +1,5 @@
 # UnitePDF
 
-[**Live Demo**](https://your-live-demo-url.com) | [GitHub Repository](https://github.com/yourusername/unitepdf)
-
 Merge PDF files for duplex printing with this modern, browser-based PDF merging tool. UnitePDF allows you to combine multiple PDF files into a single document with support for duplex printing optimization.
 
 ## Why UnitePDF?
