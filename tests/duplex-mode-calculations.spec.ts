@@ -9,7 +9,7 @@ test.describe('Duplex Mode Calculations', () => {
     const fileChooserPromise1 = page.waitForEvent('filechooser');
     await page.getByTestId('dropzone').click();
     const fileChooser1 = await fileChooserPromise1;
-    await fileChooser1.setFiles('/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/3-pages.pdf');
+    await fileChooser1.setFiles('tests/fixtures/3-pages.pdf');
 
     // Verify 3 pages are loaded
     await expect(page.getByText('3 pages')).toBeVisible();
@@ -19,7 +19,7 @@ test.describe('Duplex Mode Calculations', () => {
     const fileChooserPromise2 = page.waitForEvent('filechooser');
     await page.getByText('+ Add more PDFs').click();
     const fileChooser2 = await fileChooserPromise2;
-    await fileChooser2.setFiles('/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/2-pages.pdf');
+    await fileChooser2.setFiles('tests/fixtures/2-pages.pdf');
 
     // Verify 5 pages total
     await expect(page.getByText('2 pages')).toBeVisible();
@@ -29,7 +29,7 @@ test.describe('Duplex Mode Calculations', () => {
     const fileChooserPromise3 = page.waitForEvent('filechooser');
     await page.getByText('+ Add more PDFs').click();
     const fileChooser3 = await fileChooserPromise3;
-    await fileChooser3.setFiles('/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/5-pages.pdf');
+    await fileChooser3.setFiles('tests/fixtures/5-pages.pdf');
 
     // Verify 10 pages total (3 + 2 + 5)
     await expect(page.getByText('5 pages')).toBeVisible();
@@ -65,7 +65,7 @@ test.describe('Duplex Mode Calculations', () => {
     const fileChooserPromise1 = page.waitForEvent('filechooser');
     await page.getByTestId('dropzone').click();
     const fileChooser1 = await fileChooserPromise1;
-    await fileChooser1.setFiles('/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/1-page.pdf');
+    await fileChooser1.setFiles('tests/fixtures/1-page.pdf');
 
     // Verify 1 page is loaded
     await expect(page.getByText('1 page')).toBeVisible();
@@ -85,7 +85,7 @@ test.describe('Duplex Mode Calculations', () => {
     const fileChooserPromise3 = page.waitForEvent('filechooser');
     await page.getByText('+ Add more PDFs').click();
     const fileChooser3 = await fileChooserPromise3;
-    await fileChooser3.setFiles('/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/5-pages.pdf');
+    await fileChooser3.setFiles('tests/fixtures/5-pages.pdf');
 
     // Verify 9 pages total (1 + 3 + 5)
     await expect(page.getByText('5 pages')).toBeVisible();
@@ -117,7 +117,7 @@ test.describe('Duplex Mode Calculations', () => {
     const fileChooserPromise2 = page.waitForEvent('filechooser');
     await page.getByText('+ Add more PDFs').click();
     const fileChooser2 = await fileChooserPromise2;
-    await fileChooser2.setFiles('/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/10-pages.pdf');
+    await fileChooser2.setFiles('tests/fixtures/10-pages.pdf');
 
     // Verify 12 pages total (2 + 10)
     await expect(page.getByText('10 pages')).toBeVisible();
