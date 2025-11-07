@@ -14,7 +14,9 @@ export async function getPageCount(pdfBytes: Uint8Array): Promise<number> {
  * Add a blank page to a PDF if it has an odd number of pages
  * This is useful for duplex printing to ensure proper alignment
  */
-export async function addBlankPageIfOdd(pdfBytes: Uint8Array): Promise<Uint8Array> {
+export async function addBlankPageIfOdd(
+  pdfBytes: Uint8Array
+): Promise<Uint8Array> {
   const pdfDoc = await PDFDocument.load(pdfBytes);
   const pageCount = pdfDoc.getPageCount();
 
@@ -29,27 +31,6 @@ export async function addBlankPageIfOdd(pdfBytes: Uint8Array): Promise<Uint8Arra
   }
 
   return await pdfDoc.save();
-}
-
-/**
- * Compress a PDF document based on the specified compression level
- * @param pdfDoc - The PDF document to compress
- * @param level - Compression level: 'extreme', 'recommended', or 'light'
- * @returns Compressed PDF as Uint8Array
- */
-export async function compressPdf(
-  pdfDoc: PDFDocument,
-  level: CompressionLevel = "recommended"
-): Promise<PDFDocument> {
-  // pdf-lib compression is primarily achieved through save options
-  // We'll return the document and apply compression during save
-  // The actual compression happens in the save() method with useObjectStreams
-
-  // Note: pdf-lib has limited image compression capabilities
-  // For more aggressive compression, you'd need additional libraries
-  // Here we're using the built-in compression features
-
-  return pdfDoc;
 }
 
 /**
@@ -106,7 +87,7 @@ export async function mergePdfs(
   // Process each PDF file
   for (const pdfBytes of pdfFiles) {
     // Load the PDF
-    let pdfDoc = await PDFDocument.load(pdfBytes);
+    const pdfDoc = await PDFDocument.load(pdfBytes);
 
     // Apply duplex mode if enabled (add blank page if odd page count)
     if (duplexMode) {
@@ -121,7 +102,10 @@ export async function mergePdfs(
     }
 
     // Copy all pages from the current PDF to the merged PDF
-    const copiedPages = await mergedPdf.copyPages(pdfDoc, pdfDoc.getPageIndices());
+    const copiedPages = await mergedPdf.copyPages(
+      pdfDoc,
+      pdfDoc.getPageIndices()
+    );
     copiedPages.forEach((page) => {
       mergedPdf.addPage(page);
     });
@@ -154,8 +138,13 @@ export async function filesToUint8Arrays(files: File[]): Promise<Uint8Array[]> {
 /**
  * Trigger download of a PDF file
  */
-export function downloadPdf(pdfBytes: Uint8Array, filename: string = "merged.pdf"): void {
-  const blob = new Blob([pdfBytes.buffer as ArrayBuffer], { type: "application/pdf" });
+export function downloadPdf(
+  pdfBytes: Uint8Array,
+  filename: string = "merged.pdf"
+): void {
+  const blob = new Blob([pdfBytes.buffer as ArrayBuffer], {
+    type: "application/pdf",
+  });
   const url = URL.createObjectURL(blob);
 
   const link = document.createElement("a");
