@@ -61,8 +61,7 @@
     "typescript-eslint": "^8.45.0",
     "vite": "npm:rolldown-vite@7.1.14",
     "vitest": "^4.0.7",
-    "vitest-browser-react": "^2.0.2",
-    "wait-on": "^9.0.1"
+    "vitest-browser-react": "^2.0.2"
   },
   "pnpm": {
     "overrides": {
