@@ -4,6 +4,8 @@ import { Header } from "@/components/Header";
 import { PdfUploader } from "@/components/PdfUploader";
 import { PdfFileGrid } from "@/components/PdfFileGrid";
 import { DuplexToggle } from "@/components/DuplexToggle";
+import { CompressionToggle } from "@/components/CompressionToggle";
+import type { CompressionLevel } from "@/components/CompressionToggle";
 import { MergeButton } from "@/components/MergeButton";
 import { filesToUint8Arrays, mergePdfs, downloadPdf } from "@/lib/pdfUtils";
 
@@ -11,18 +13,43 @@ function App() {
   const [files, setFiles] = useState<File[]>([]);
   const [pageCounts, setPageCounts] = useState<Map<string, number>>(new Map());
   const [duplexEnabled, setDuplexEnabled] = useState(false);
+  const [compressionEnabled, setCompressionEnabled] = useState(false);
+  const [compressionLevel, setCompressionLevel] = useState<CompressionLevel>("recommended");
   const [isLoading, setIsLoading] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [mergedPdf, setMergedPdf] = useState<Uint8Array | null>(null);
   const [mergedPdfSize, setMergedPdfSize] = useState<number | null>(null);
+
+  // Reset merged PDF state
+  const resetMergedState = () => {
+    setMergedPdf(null);
+    setMergedPdfSize(null);
+  };
 
   const handleFilesSelected = (newFiles: File[]) => {
     setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-    setMergedPdfSize(null); // Reset merged size when files change
+    resetMergedState();
   };
 
   const handleRemoveFile = (index: number) => {
     setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
-    setMergedPdfSize(null); // Reset merged size when files change
+    resetMergedState();
+  };
+
+  // Handle settings changes - reset merged state
+  const handleDuplexChange = (enabled: boolean) => {
+    setDuplexEnabled(enabled);
+    resetMergedState();
+  };
+
+  const handleCompressionEnabledChange = (enabled: boolean) => {
+    setCompressionEnabled(enabled);
+    resetMergedState();
+  };
+
+  const handleCompressionLevelChange = (level: CompressionLevel) => {
+    setCompressionLevel(level);
+    resetMergedState();
   };
 
   // Format file size for display
@@ -74,31 +101,38 @@ function App() {
 
       // Merge PDFs
       setProgress(50);
-      const mergedPdf = await mergePdfs(pdfBytes, duplexEnabled);
+      const mergedPdfBytes = await mergePdfs(
+        pdfBytes,
+        duplexEnabled,
+        compressionEnabled,
+        compressionLevel
+      );
 
-      // Store merged PDF size
-      setMergedPdfSize(mergedPdf.length);
-
-      // Download the merged PDF
       setProgress(80);
-      const timestamp = new Date().toISOString().slice(0, 10);
-      downloadPdf(mergedPdf, `merged-${timestamp}.pdf`);
+
+      // Store merged PDF and size
+      setMergedPdf(mergedPdfBytes);
+      setMergedPdfSize(mergedPdfBytes.length);
 
       setProgress(100);
-
-      // Reset after a brief delay
-      setTimeout(() => {
-        setFiles([]);
-        setProgress(0);
-        setIsLoading(false);
-      }, 1000);
+      setIsLoading(false);
     } catch (error) {
       console.error("Error merging PDFs:", error);
       setIsLoading(false);
       setProgress(0);
-      setMergedPdfSize(null);
+      resetMergedState();
       alert("Failed to merge PDFs. Please try again.");
     }
+  };
+
+  const handleDownload = () => {
+    if (!mergedPdf) return;
+
+    const timestamp = new Date().toISOString().slice(0, 10);
+    downloadPdf(mergedPdf, `merged-${timestamp}.pdf`);
+
+    // Don't clear anything - let user download multiple times if needed
+    // State will be cleared when files change or settings are modified
   };
 
   return (
@@ -172,22 +206,45 @@ function App() {
 
                   {/* Duplex Toggle */}
                   {files.length > 0 && (
-                    <DuplexToggle enabled={duplexEnabled} onChange={setDuplexEnabled} />
+                    <DuplexToggle enabled={duplexEnabled} onChange={handleDuplexChange} />
                   )}
 
-                  {/* Merge Button */}
-                  <MergeButton
-                    fileCount={files.length}
-                    onMerge={handleMerge}
-                    isLoading={isLoading}
-                    progress={progress}
-                  />
+                  {/* Compression Toggle */}
+                  {files.length > 0 && (
+                    <CompressionToggle
+                      enabled={compressionEnabled}
+                      level={compressionLevel}
+                      onEnabledChange={handleCompressionEnabledChange}
+                      onLevelChange={handleCompressionLevelChange}
+                    />
+                  )}
 
-                  {/* Stats */}
+                  {/* Continue/Download Button */}
+                  {!mergedPdf ? (
+                    <MergeButton
+                      fileCount={files.length}
+                      onMerge={handleMerge}
+                      isLoading={isLoading}
+                      progress={progress}
+                    />
+                  ) : (
+                    <button
+                      onClick={handleDownload}
+                      className="w-full bg-green-600 hover:bg-green-700 text-white font-semibold py-3 px-6 rounded-lg transition-colors shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
+                      </svg>
+                      Download Merged PDF
+                    </button>
+                  )}
+
+                  {/* Summary */}
                   {files.length > 0 && (
                     <div className="pt-6 border-t space-y-3">
                       <h3 className="text-sm font-semibold">Summary</h3>
                       <div className="space-y-2">
+                        {/* Input Information */}
                         <div className="flex justify-between text-sm">
                           <span className="text-muted-foreground">Total PDFs:</span>
                           <span className="font-bold text-primary">{files.length}</span>
@@ -197,19 +254,45 @@ function App() {
                           <span className="font-bold text-primary">{calculateTotalPages()}</span>
                         </div>
                         <div className="flex justify-between text-sm">
-                          <span className="text-muted-foreground">Total size:</span>
+                          <span className="text-muted-foreground">Input size:</span>
                           <span className="font-bold text-primary">{formatFileSize(calculateTotalSize())}</span>
                         </div>
-                        <div className="flex justify-between text-sm">
+
+                        {/* Settings Status */}
+                        <div className="flex justify-between text-sm pt-2 border-t border-border/50">
                           <span className="text-muted-foreground">Duplex mode:</span>
                           <span className="font-bold text-foreground">
                             {duplexEnabled ? "✓ Enabled" : "✗ Disabled"}
                           </span>
                         </div>
+                        <div className="flex justify-between text-sm">
+                          <span className="text-muted-foreground">Compression:</span>
+                          <span className="font-bold text-foreground">
+                            {compressionEnabled ? `✓ ${compressionLevel.charAt(0).toUpperCase() + compressionLevel.slice(1)}` : "✗ Disabled"}
+                          </span>
+                        </div>
+
+                        {/* Output Information - Highlighted */}
                         {mergedPdfSize !== null && (
-                          <div className="flex justify-between text-sm pt-2 border-t border-primary/20">
-                            <span className="text-muted-foreground">Merged PDF size:</span>
-                            <span className="font-bold text-green-600 dark:text-green-400">{formatFileSize(mergedPdfSize)}</span>
+                          <div className="pt-3 mt-2 border-t border-primary/20">
+                            <div className="flex items-center justify-between text-sm p-3 rounded-lg bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-900">
+                              <div className="flex items-center gap-2">
+                                <svg className="w-4 h-4 text-green-600 dark:text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                </svg>
+                                <span className="font-semibold text-green-900 dark:text-green-100">Output size:</span>
+                              </div>
+                              <span className="font-bold text-green-600 dark:text-green-400">{formatFileSize(mergedPdfSize)}</span>
+                            </div>
+                            {/* Size comparison */}
+                            {compressionEnabled && (
+                              <div className="flex justify-between text-xs text-muted-foreground mt-2 px-1">
+                                <span>Compression savings:</span>
+                                <span className="font-semibold text-green-600 dark:text-green-400">
+                                  {((1 - mergedPdfSize / calculateTotalSize()) * 100).toFixed(1)}%
+                                </span>
+                              </div>
+                            )}
                           </div>
                         )}
                       </div>

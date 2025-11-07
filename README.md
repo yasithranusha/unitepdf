@@ -313,11 +313,8 @@ We welcome contributions! Please follow these guidelines:
 - [x] SEO optimization
 - [x] Comprehensive E2E testing
 - [x] GitHub Actions CI/CD
-- [ ] Page range selection for each PDF
 - [ ] Dark mode support
-- [ ] Internationalization (i18n)
-- [ ] PDF compression options
-- [ ] Batch processing support
+- [x] PDF compression options
 
 ## License
 
