@@ -1,13 +1,15 @@
 # UnitePDF E2E Test Plan
 
 ## Overview
+
 Comprehensive End-to-End test plan for the UnitePDF application covering the complete user flow from upload to download.
 
 **Application URL**: http://localhost:5173/
 
-**Test Data Location**: `/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/`
+**Test Data Location**: `tests/fixtures/`
 
 Available test PDFs:
+
 - `1-page.pdf` (odd pages)
 - `2-pages.pdf` (even pages)
 - `3-pages.pdf` (odd pages)
@@ -19,16 +21,19 @@ Available test PDFs:
 ## Test Suite 1: Complete Happy Path Flow
 
 ### Test Case 1.1: Full User Journey with Multiple PDFs
+
 **Priority**: Critical
 **Description**: Tests the complete end-to-end flow from upload to download with multiple PDFs
 
 **Preconditions**:
+
 - Application is running on http://localhost:5173/
 - Test PDF files are available in the fixtures directory
 
 **Test Steps**:
 
 1. **Navigate to Application**
+
    - Action: Open http://localhost:5173/
    - Expected: Homepage loads with upload area visible
    - Expected: "Upload PDF Files" button is visible
@@ -36,6 +41,7 @@ Available test PDFs:
    - Expected: No PDFs shown in the file grid
 
 2. **Upload Multiple PDF Files (3 files)**
+
    - Action: Upload `3-pages.pdf`, `5-pages.pdf`, and `2-pages.pdf` (in this order)
    - Expected: Upload area changes to "Add more PDFs" button
    - Expected: 3 PDF cards appear in the file grid
@@ -49,6 +55,7 @@ Available test PDFs:
      - 2-pages.pdf: "2 pages"
 
 3. **Verify Previews and Metadata**
+
    - Action: Wait for all previews to load
    - Expected: Each PDF card shows a preview image of the first page
    - Expected: Loading spinners disappear
@@ -56,6 +63,7 @@ Available test PDFs:
    - Expected: Badge shows count "3"
 
 4. **Check Initial Summary (Without Duplex)**
+
    - Action: Scroll to summary section in right sidebar
    - Expected: "Summary" section is visible
    - Expected: "Total PDFs: 3" is displayed
@@ -65,6 +73,7 @@ Available test PDFs:
    - Expected: No "Merged PDF size" is shown yet
 
 5. **Test Drag-and-Drop Reordering**
+
    - Action: Drag the third PDF (#3, 2-pages.pdf) to the first position
    - Expected: PDF cards reorder smoothly
    - Expected: Position badges update: 2-pages.pdf becomes #1
@@ -73,18 +82,21 @@ Available test PDFs:
    - Expected: Visual feedback during drag (opacity change, scale)
 
 6. **Verify Reordered State**
+
    - Action: Check the new order
    - Expected: New order is: 2-pages.pdf (#1), 3-pages.pdf (#2), 5-pages.pdf (#3)
    - Expected: Summary still shows "Total pages: 10"
    - Expected: Summary still shows "Total PDFs: 3"
 
 7. **Enable Duplex Mode**
+
    - Action: Toggle the "Duplex Printing" switch ON
    - Expected: Switch animates to enabled state
    - Expected: Info tooltip icon is visible next to "Duplex Printing" label
    - Expected: Description text: "Add blank pages for PDFs with odd page counts"
 
 8. **Verify Page Count Adjustment with Duplex**
+
    - Action: Check the summary after enabling duplex
    - Expected: "Total pages: 12" is displayed (calculation: 2 + 3+1 + 5+1 = 12)
      - 2-pages.pdf: 2 pages (even, no blank page added, but it's not last)
@@ -94,11 +106,13 @@ Available test PDFs:
    - Expected: "Total PDFs: 3" remains the same
 
 9. **Hover Over Info Tooltip**
+
    - Action: Hover over the info icon next to "Duplex Printing"
    - Expected: Tooltip appears with explanation text
    - Expected: Text explains: "Adds a blank page after PDFs with odd page counts..."
 
 10. **Initiate PDF Merge**
+
     - Action: Click "Merge 3 PDFs" button
     - Expected: Button becomes disabled
     - Expected: Button text changes to "Merging PDFs..."
@@ -107,6 +121,7 @@ Available test PDFs:
     - Expected: Progress updates from 0% → 20% → 50% → 80% → 100%
 
 11. **Verify Download Triggered**
+
     - Action: Wait for merge completion
     - Expected: Browser download is triggered
     - Expected: Downloaded file name format: `merged-YYYY-MM-DD.pdf`
@@ -128,9 +143,11 @@ Available test PDFs:
 ## Test Suite 2: Upload Functionality
 
 ### Test Case 2.1: Upload Single PDF via File Picker
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Navigate to http://localhost:5173/
 2. Click on "Upload PDF Files" button
 3. Select `1-page.pdf` from file picker
@@ -143,9 +160,11 @@ Available test PDFs:
    - "Uploaded PDFs" shows "1 file ready to merge" (singular)
 
 ### Test Case 2.2: Upload Multiple PDFs at Once
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Navigate to http://localhost:5173/
 2. Click "Upload PDF Files"
 3. Select multiple files: `1-page.pdf`, `2-pages.pdf`, `3-pages.pdf` (multi-select)
@@ -157,9 +176,11 @@ Available test PDFs:
    - Total pages calculated correctly: 6 pages (1+2+3)
 
 ### Test Case 2.3: Add More PDFs to Existing Collection
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`
 2. Verify 1 PDF is shown
 3. Click "+ Add more PDFs" button
@@ -171,9 +192,11 @@ Available test PDFs:
    - Total pages: 3
 
 ### Test Case 2.4: Upload PDFs via Drag and Drop
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Navigate to application
 2. Drag `5-pages.pdf` and drop onto upload area
 3. Verify:
@@ -187,9 +210,11 @@ Available test PDFs:
 ## Test Suite 3: PDF Preview and Metadata
 
 ### Test Case 3.1: Verify Preview Generation
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `3-pages.pdf`
 2. Observe preview loading:
    - Initial state shows loading spinner with "Loading preview..." text
@@ -198,9 +223,11 @@ Available test PDFs:
    - Preview is clear and readable
 
 ### Test Case 3.2: Verify Page Count Display
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload each test PDF individually (in separate test runs):
    - `1-page.pdf` → "1 page" (singular)
    - `2-pages.pdf` → "2 pages"
@@ -210,9 +237,11 @@ Available test PDFs:
 2. Verify correct page count with FileStack icon
 
 ### Test Case 3.3: Verify File Size Display
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload `10-pages.pdf` (larger file)
 2. Verify file size is displayed in appropriate unit:
    - If < 1024 bytes: "X bytes"
@@ -221,9 +250,11 @@ Available test PDFs:
 3. Format shows 1 decimal place
 
 ### Test Case 3.4: Verify Position Badges
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload 3 PDFs
 2. Verify each card shows position badge in bottom-left:
    - First PDF: "#1"
@@ -236,9 +267,11 @@ Available test PDFs:
 ## Test Suite 4: Drag-and-Drop Reordering
 
 ### Test Case 4.1: Reorder PDFs - Move First to Last
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `2-pages.pdf`, `3-pages.pdf` (in order)
 2. Drag first PDF (#1) to last position (#3)
 3. Verify:
@@ -247,18 +280,22 @@ Available test PDFs:
    - Total pages remain the same
 
 ### Test Case 4.2: Reorder PDFs - Move Last to First
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload 3 PDFs
 2. Drag last PDF to first position
 3. Verify reordering works correctly
 4. Verify position badges update
 
 ### Test Case 4.3: Reorder PDFs - Move Middle to Ends
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `2-pages.pdf`, `3-pages.pdf`
 2. Drag middle PDF (#2) to first position
 3. Verify order updates
@@ -266,9 +303,11 @@ Available test PDFs:
 5. Verify order updates again
 
 ### Test Case 4.4: Visual Feedback During Drag
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload 3 PDFs
 2. Hover over a PDF card
 3. Verify:
@@ -288,9 +327,11 @@ Available test PDFs:
    - Cards are in new order
 
 ### Test Case 4.5: No Reorder When Dropped on Same Position
+
 **Priority**: Low
 
 **Test Steps**:
+
 1. Upload 3 PDFs
 2. Drag first PDF and drop on itself
 3. Verify:
@@ -303,9 +344,11 @@ Available test PDFs:
 ## Test Suite 5: Duplex Mode Functionality
 
 ### Test Case 5.1: Toggle Duplex Mode On
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload `3-pages.pdf` (odd) and `2-pages.pdf` (even)
 2. Note initial total pages: 5 (3+2)
 3. Toggle duplex mode ON
@@ -315,9 +358,11 @@ Available test PDFs:
    - Total pages: 6 (3+1+2 since 3-pages is not last)
 
 ### Test Case 5.2: Toggle Duplex Mode Off
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload 2 PDFs (one odd, one even)
 2. Enable duplex mode
 3. Note adjusted page count
@@ -328,9 +373,11 @@ Available test PDFs:
    - Total pages return to original sum
 
 ### Test Case 5.3: Duplex Calculation - All Odd Pages
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `3-pages.pdf`, `5-pages.pdf` (all odd)
 2. Enable duplex mode
 3. Verify total pages: 11 (1+1+3+1+5 = 11)
@@ -339,18 +386,22 @@ Available test PDFs:
    - Third PDF: 5 (no blank added, is last)
 
 ### Test Case 5.4: Duplex Calculation - All Even Pages
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `2-pages.pdf`, `10-pages.pdf` (all even)
 2. Enable duplex mode
 3. Verify total pages: 12 (2+10)
    - No blank pages added (all even)
 
 ### Test Case 5.5: Duplex Calculation - Mixed Pages
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `2-pages.pdf`, `3-pages.pdf`, `10-pages.pdf` (even, odd, even)
 2. Enable duplex mode
 3. Verify total pages: 16
@@ -359,25 +410,31 @@ Available test PDFs:
    - 10-pages: 10 (even, is last, no blank)
 
 ### Test Case 5.6: Duplex Calculation - Single Odd PDF
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload only `5-pages.pdf` (odd, is last)
 2. Enable duplex mode
 3. Verify total pages: 5 (no blank page added since it's the last PDF)
 
 ### Test Case 5.7: Duplex Calculation - Single Even PDF
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload only `2-pages.pdf` (even)
 2. Enable duplex mode
 3. Verify total pages: 2 (no change)
 
 ### Test Case 5.8: Info Tooltip Content
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload at least one PDF
 2. Hover over info icon (i) next to "Duplex Printing"
 3. Verify tooltip appears with text:
@@ -390,9 +447,11 @@ Available test PDFs:
 ## Test Suite 6: Summary Display
 
 ### Test Case 6.1: Summary Appears with PDFs
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Navigate to application
 2. Verify summary section is not visible initially
 3. Upload 1 PDF
@@ -401,9 +460,11 @@ Available test PDFs:
    - Shows "Summary" heading
 
 ### Test Case 6.2: Total PDFs Count
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload 1 PDF
    - Verify "Total PDFs: 1"
 2. Add 2 more PDFs
@@ -412,18 +473,22 @@ Available test PDFs:
    - Verify "Total PDFs: 2"
 
 ### Test Case 6.3: Total Pages Calculation
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `2-pages.pdf`, `3-pages.pdf`
 2. Verify "Total pages: 6" (without duplex)
 3. Enable duplex
 4. Verify "Total pages: 8" (1+1+2+3+1)
 
 ### Test Case 6.4: Total Size Display
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `1-page.pdf` (~5 KB)
 2. Verify "Total size: X.X KB"
 3. Add `10-pages.pdf` (~20 KB)
@@ -431,9 +496,11 @@ Available test PDFs:
 5. Verify format uses appropriate unit (bytes/KB/MB)
 
 ### Test Case 6.5: Duplex Mode Status
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload PDFs
 2. Verify "Duplex mode: ✗ Disabled"
 3. Enable duplex toggle
@@ -442,9 +509,11 @@ Available test PDFs:
 6. Verify "Duplex mode: ✗ Disabled"
 
 ### Test Case 6.6: Merged PDF Size After Merge
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `2-pages.pdf`
 2. Verify "Merged PDF size" is NOT shown
 3. Click "Merge 2 PDFs"
@@ -460,9 +529,11 @@ Available test PDFs:
 ## Test Suite 7: Merge Process
 
 ### Test Case 7.1: Merge Button - Initial State
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Navigate to application (no PDFs)
 2. Verify:
    - Button text: "Merge 0 PDFs"
@@ -470,9 +541,11 @@ Available test PDFs:
    - Help text shown: "Upload PDF files to begin merging"
 
 ### Test Case 7.2: Merge Button - Enabled State
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload 2 PDFs
 2. Verify:
    - Button text: "Merge 2 PDFs"
@@ -482,9 +555,11 @@ Available test PDFs:
    - Help text is not shown
 
 ### Test Case 7.3: Merge Progress Indicator
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload `10-pages.pdf`, `5-pages.pdf` (larger files for observable progress)
 2. Click "Merge 2 PDFs"
 3. Verify:
@@ -497,9 +572,11 @@ Available test PDFs:
    - Each percentage is displayed on right side
 
 ### Test Case 7.4: Successful Merge and Download
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `2-pages.pdf`
 2. Enable duplex mode
 3. Click "Merge 2 PDFs"
@@ -515,9 +592,11 @@ Available test PDFs:
      - Button disabled again
 
 ### Test Case 7.5: Merge with Duplex Enabled
+
 **Priority**: Critical
 
 **Test Steps**:
+
 1. Upload `3-pages.pdf`, `5-pages.pdf` (both odd)
 2. Enable duplex mode
 3. Click "Merge 2 PDFs"
@@ -529,9 +608,11 @@ Available test PDFs:
    - Content of second PDF starts on page 5
 
 ### Test Case 7.6: Merge Without Duplex
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `3-pages.pdf`, `5-pages.pdf`
 2. Keep duplex mode OFF
 3. Click "Merge 2 PDFs"
@@ -546,9 +627,11 @@ Available test PDFs:
 ## Test Suite 8: File Removal
 
 ### Test Case 8.1: Remove Single PDF
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload 3 PDFs
 2. Hover over second PDF card
 3. Verify:
@@ -565,9 +648,11 @@ Available test PDFs:
      - Total size recalculates
 
 ### Test Case 8.2: Remove All PDFs One by One
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload 3 PDFs
 2. Remove first PDF
    - Verify 2 remain
@@ -580,9 +665,11 @@ Available test PDFs:
    - Verify button disabled
 
 ### Test Case 8.3: Remove PDF After Enabling Duplex
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`, `3-pages.pdf`, `2-pages.pdf`
 2. Enable duplex mode
 3. Note total pages (should be 7: 1+1+3+1+2)
@@ -593,9 +680,11 @@ Available test PDFs:
    - Duplex mode still enabled
 
 ### Test Case 8.4: Remove Button Accessibility
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload 1 PDF named "test-document.pdf"
 2. Hover over card
 3. Check remove button:
@@ -608,9 +697,11 @@ Available test PDFs:
 ## Test Suite 9: Edge Cases and Error Handling
 
 ### Test Case 9.1: Upload Same PDF Multiple Times
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload `1-page.pdf`
 2. Click "+ Add more PDFs"
 3. Upload `1-page.pdf` again
@@ -621,9 +712,11 @@ Available test PDFs:
    - Total pages: 2
 
 ### Test Case 9.2: Merge with Only One PDF
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload single PDF: `5-pages.pdf`
 2. Verify button text: "Merge 1 PDF" (singular)
 3. Click "Merge 1 PDF"
@@ -632,9 +725,11 @@ Available test PDFs:
 6. **Manual verification**: PDF downloads correctly with 5 pages
 
 ### Test Case 9.3: Large Number of PDFs
+
 **Priority**: Low
 
 **Test Steps**:
+
 1. Upload 10+ PDFs
 2. Verify:
    - All PDFs load and display
@@ -644,9 +739,11 @@ Available test PDFs:
    - Summary calculates correctly
 
 ### Test Case 9.4: Rapid Toggle of Duplex Mode
+
 **Priority**: Low
 
 **Test Steps**:
+
 1. Upload 3 PDFs (mix of odd and even)
 2. Rapidly toggle duplex mode ON and OFF multiple times
 3. Verify:
@@ -656,10 +753,12 @@ Available test PDFs:
    - No UI glitches
 
 ### Test Case 9.5: Merge Failure Handling
+
 **Priority**: High
 **Note**: This test requires simulating a merge error
 
 **Test Steps**:
+
 1. Upload 2 PDFs
 2. Click merge
 3. **Simulate error** (requires code modification or network failure)
@@ -672,9 +771,11 @@ Available test PDFs:
    - No merged PDF size is set
 
 ### Test Case 9.6: Remove PDF While Preview Loading
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload large PDF file
 2. Immediately click remove button (before preview loads)
 3. Verify:
@@ -687,9 +788,11 @@ Available test PDFs:
 ## Test Suite 10: Responsive Design
 
 ### Test Case 10.1: Mobile View (375px width)
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Set viewport to 375x667 (iPhone SE)
 2. Navigate to application
 3. Verify:
@@ -700,9 +803,11 @@ Available test PDFs:
    - All interactive elements are touch-friendly (min 44x44px)
 
 ### Test Case 10.2: Tablet View (768px width)
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Set viewport to 768x1024 (iPad)
 2. Navigate to application
 3. Verify:
@@ -711,9 +816,11 @@ Available test PDFs:
    - Summary sidebar is visible
 
 ### Test Case 10.3: Desktop View (1920px width)
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Set viewport to 1920x1080
 2. Navigate to application
 3. Verify:
@@ -727,9 +834,11 @@ Available test PDFs:
 ## Test Suite 11: Accessibility
 
 ### Test Case 11.1: Keyboard Navigation
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Navigate using Tab key only
 2. Verify:
    - All interactive elements are reachable
@@ -738,9 +847,11 @@ Available test PDFs:
    - Remove buttons are keyboard accessible
 
 ### Test Case 11.2: Screen Reader Labels
+
 **Priority**: High
 
 **Test Steps**:
+
 1. Upload PDFs
 2. Check aria-labels:
    - Upload button: appropriate label
@@ -750,16 +861,20 @@ Available test PDFs:
    - Progress bar: "Merge progress"
 
 ### Test Case 11.3: Alt Text for Images
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload PDF
 2. Verify preview image has alt text: "Preview of [filename]"
 
 ### Test Case 11.4: Tooltip Accessibility
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Check duplex info tooltip
 2. Verify:
    - Trigger button has aria-label: "More information about duplex printing"
@@ -770,26 +885,32 @@ Available test PDFs:
 ## Test Suite 12: Performance
 
 ### Test Case 12.1: Preview Generation Time
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload `10-pages.pdf`
 2. Measure time from upload to preview appearance
 3. Expected: < 2 seconds for preview generation
 
 ### Test Case 12.2: Merge Performance
+
 **Priority**: Medium
 
 **Test Steps**:
+
 1. Upload 3 large PDFs (10 pages each)
 2. Click merge
 3. Measure time to completion
 4. Expected: Reasonable time based on file size
 
 ### Test Case 12.3: Memory Cleanup After Merge
+
 **Priority**: Low
 
 **Test Steps**:
+
 1. Open browser dev tools → Memory
 2. Upload PDFs
 3. Merge PDFs
@@ -804,19 +925,25 @@ Available test PDFs:
 ## Test Suite 13: Cross-Browser Compatibility
 
 ### Test Case 13.1: Chrome/Chromium
+
 **Priority**: Critical
+
 - Run all critical tests in Chrome
 - Verify PDF preview generation works
 - Verify merge and download work
 
 ### Test Case 13.2: Firefox
+
 **Priority**: High
+
 - Run all critical tests in Firefox
 - Verify PDF.js compatibility
 - Verify file handling works
 
 ### Test Case 13.3: Safari/WebKit
+
 **Priority**: High
+
 - Run all critical tests in Safari
 - Verify drag-and-drop works
 - Verify download mechanism works
@@ -825,19 +952,20 @@ Available test PDFs:
 
 ## Test Data Matrix
 
-| File | Pages | Parity | Size | Use Case |
-|------|-------|--------|------|----------|
-| 1-page.pdf | 1 | Odd | ~5 KB | Single page, smallest file |
-| 2-pages.pdf | 2 | Even | ~8 KB | Even pages |
-| 3-pages.pdf | 3 | Odd | ~11 KB | Odd pages |
-| 5-pages.pdf | 5 | Odd | ~17 KB | Medium odd |
-| 10-pages.pdf | 10 | Even | ~30 KB | Largest file, even pages |
+| File         | Pages | Parity | Size   | Use Case                   |
+| ------------ | ----- | ------ | ------ | -------------------------- |
+| 1-page.pdf   | 1     | Odd    | ~5 KB  | Single page, smallest file |
+| 2-pages.pdf  | 2     | Even   | ~8 KB  | Even pages                 |
+| 3-pages.pdf  | 3     | Odd    | ~11 KB | Odd pages                  |
+| 5-pages.pdf  | 5     | Odd    | ~17 KB | Medium odd                 |
+| 10-pages.pdf | 10    | Even   | ~30 KB | Largest file, even pages   |
 
 ## Duplex Calculation Reference
 
 Formula: For each PDF except the last, if page count is odd, add 1 blank page.
 
 Examples:
+
 - [3, 5, 2] with duplex: 3+1 + 5+1 + 2 = 12 pages
 - [1, 2, 3] with duplex: 1+1 + 2 + 3 = 7 pages
 - [2, 4, 6] with duplex: 2 + 4 + 6 = 12 pages (no change)
@@ -848,24 +976,28 @@ Examples:
 ## Automation Priority
 
 **Must Automate (P0)**:
+
 - Test Suite 1: Complete Happy Path Flow
 - Test Case 5.1-5.5: Duplex calculations
 - Test Case 6.3: Total pages calculation
 - Test Case 7.4: Successful merge
 
 **Should Automate (P1)**:
+
 - Test Suite 2: Upload functionality
 - Test Suite 4: Drag-and-drop reordering
 - Test Suite 6: Summary display
 - Test Suite 8: File removal
 
 **Nice to Automate (P2)**:
+
 - Test Suite 9: Edge cases
 - Test Suite 10: Responsive design
 - Test Suite 11: Accessibility
 - Test Suite 13: Cross-browser
 
 **Manual Testing**:
+
 - Test Case 7.5-7.6: Manual PDF verification (open merged file)
 - Test Case 12: Performance measurements
 - Visual regression testing for UI elements
@@ -875,33 +1007,39 @@ Examples:
 ## Notes for Test Implementation
 
 1. **Setup Requirements**:
+
    - Ensure dev server is running on port 5173
-   - Test fixtures must be in `/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/`
+   - Test fixtures must be in `tests/fixtures/`
    - Set up proper browser context with downloads enabled
 
 2. **File Upload Helpers**:
+
    - Create helper function to upload files via file input
    - Use `page.setInputFiles()` for programmatic upload
    - Consider creating fixtures for drag-and-drop testing
 
 3. **Download Verification**:
+
    - Use Playwright's download events to capture file
    - Verify filename matches pattern
    - Optionally verify merged PDF content
 
 4. **Timing Considerations**:
+
    - Wait for preview generation (loading spinners disappear)
    - Wait for page count updates
    - Wait for merge completion (progress = 100%)
    - 1-second delay after merge before UI resets
 
 5. **Assertions Strategy**:
+
    - Verify element visibility
    - Check text content
    - Validate computed values (page counts, sizes)
    - Test state changes (enabled/disabled, checked/unchecked)
 
 6. **Test Data Cleanup**:
+
    - Clear browser state between tests
    - No server-side cleanup needed (all client-side)
 

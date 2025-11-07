@@ -7,7 +7,9 @@ Comprehensive end-to-end test plan for the UnitePDF application using Playwright
 This directory contains comprehensive test planning and implementation guides:
 
 ### 📋 [TESTPLAN.md](./TESTPLAN.md)
+
 **Comprehensive Test Plan** - Detailed test cases covering all aspects of the application:
+
 - 13 test suites with 50+ test cases
 - Complete user flows and edge cases
 - Expected results and assertions
@@ -15,7 +17,9 @@ This directory contains comprehensive test planning and implementation guides:
 - Manual and automated test scenarios
 
 ### 🎯 [TEST_SCENARIOS.md](./TEST_SCENARIOS.md)
+
 **Quick Reference Guide** - Condensed test scenarios for rapid implementation:
+
 - Critical test scenarios (P0)
 - Key test flows with step-by-step instructions
 - Common assertions and locators
@@ -23,7 +27,9 @@ This directory contains comprehensive test planning and implementation guides:
 - Execution strategy and priorities
 
 ### 🛠️ [PLAYWRIGHT_IMPLEMENTATION_GUIDE.md](./PLAYWRIGHT_IMPLEMENTATION_GUIDE.md)
+
 **Implementation Guide** - Practical guide for writing Playwright tests:
+
 - Complete helper function library
 - Example test implementations
 - Best practices and patterns
@@ -35,16 +41,20 @@ This directory contains comprehensive test planning and implementation guides:
 ## Quick Start
 
 ### 1. Review Test Plan
+
 Start with `TESTPLAN.md` to understand all test requirements.
 
 ### 2. Implement Critical Tests
+
 Use `TEST_SCENARIOS.md` and `PLAYWRIGHT_IMPLEMENTATION_GUIDE.md` to implement:
+
 - ✅ Complete happy path E2E test
 - ✅ Duplex mode calculations
 - ✅ Upload functionality
 - ✅ Merge and download process
 
 ### 3. Run Tests
+
 ```bash
 # Install dependencies (if not already done)
 pnpm install
@@ -67,6 +77,7 @@ pnpm exec playwright test unite-pdf-happy-path.spec.ts
 ## Test Coverage
 
 ### Core User Flows (P0 - Critical)
+
 - ✅ **Complete Happy Path**: Upload → Reorder → Duplex → Merge → Download
 - ✅ **Duplex Calculations**: All variations (odd/even/mixed pages)
 - ✅ **Upload**: Single, multiple, add more
@@ -74,12 +85,14 @@ pnpm exec playwright test unite-pdf-happy-path.spec.ts
 - ✅ **Summary Display**: Accurate calculations
 
 ### Additional Features (P1 - High)
+
 - ✅ **Drag-and-Drop**: Reordering PDFs
 - ✅ **File Removal**: Remove individual PDFs
 - ✅ **Preview Generation**: PDF thumbnails
 - ✅ **Metadata Display**: File names, sizes, page counts
 
 ### Edge Cases (P2 - Medium)
+
 - ✅ Same PDF uploaded multiple times
 - ✅ Single PDF merge
 - ✅ Rapid duplex toggle
@@ -90,7 +103,7 @@ pnpm exec playwright test unite-pdf-happy-path.spec.ts
 
 ## Test Data
 
-Location: `/Users/yasithranusha/Developer/proj-pdf/tests/fixtures/`
+Location: `tests/fixtures/`
 
 Available test PDFs:
 | File | Pages | Parity | Size | Description |
@@ -102,6 +115,7 @@ Available test PDFs:
 | 10-pages.pdf | 10 | Even | ~30 KB | Large PDF |
 
 All test PDFs have:
+
 - Visible page numbers on each page
 - Page parity labels (ODD/EVEN)
 - File name and page count in header
@@ -111,6 +125,7 @@ All test PDFs have:
 ## Key Test Scenarios
 
 ### 1. Complete Happy Path
+
 ```
 1. Upload 3 PDFs (3-pages, 5-pages, 2-pages)
 2. Verify previews and metadata
@@ -123,6 +138,7 @@ All test PDFs have:
 ```
 
 ### 2. Duplex Calculations
+
 ```
 Test Matrix:
 - All odd pages: [1, 3, 5] → 11 pages with duplex (1+1 + 3+1 + 5)
@@ -132,6 +148,7 @@ Test Matrix:
 ```
 
 ### 3. Upload Variations
+
 ```
 - Single PDF upload
 - Multiple PDFs at once
@@ -140,6 +157,7 @@ Test Matrix:
 ```
 
 ### 4. Summary Accuracy
+
 ```
 Verify calculations:
 - Total PDFs count
@@ -154,11 +172,13 @@ Verify calculations:
 ## Implementation Steps
 
 ### Phase 1: Setup (15 minutes)
-1. Create `/Users/yasithranusha/Developer/proj-pdf/tests/helpers/pdf-helpers.ts`
+
+1. Create `tests/helpers/pdf-helpers.ts`
 2. Copy helper functions from `PLAYWRIGHT_IMPLEMENTATION_GUIDE.md`
 3. Verify Playwright configuration
 
 ### Phase 2: Critical Tests (2-3 hours)
+
 1. Implement `unite-pdf-happy-path.spec.ts`
 2. Implement `duplex-mode.spec.ts`
 3. Implement `upload-functionality.spec.ts`
@@ -166,12 +186,14 @@ Verify calculations:
 5. Run tests and fix any failures
 
 ### Phase 3: Additional Tests (2-3 hours)
+
 1. Implement `reordering.spec.ts`
 2. Implement `summary.spec.ts`
 3. Implement `file-removal.spec.ts`
 4. Run full test suite
 
 ### Phase 4: Edge Cases (1-2 hours)
+
 1. Implement `edge-cases.spec.ts`
 2. Add responsive design tests
 3. Add accessibility tests
@@ -182,16 +204,19 @@ Verify calculations:
 ## Expected Results
 
 ### All Tests Pass ✅
+
 - Chromium: All tests passing
 - Firefox: All tests passing
 - WebKit: All tests passing
 
 ### Performance Metrics
+
 - Preview generation: < 2 seconds per PDF
 - Merge process: Based on file size
 - Test execution: < 5 minutes total
 
 ### Coverage
+
 - 50+ test cases implemented
 - All critical user flows covered
 - Edge cases handled
@@ -202,6 +227,7 @@ Verify calculations:
 ## Running Tests in Different Modes
 
 ### Development Mode (Fast Feedback)
+
 ```bash
 # Run tests in headed mode (see browser)
 pnpm exec playwright test --headed
@@ -214,6 +240,7 @@ pnpm exec playwright test -g "happy path"
 ```
 
 ### CI/CD Mode (Full Coverage)
+
 ```bash
 # Run all tests in all browsers
 pnpm exec playwright test
@@ -226,6 +253,7 @@ pnpm exec playwright test --reporter=html
 ```
 
 ### Debug Mode
+
 ```bash
 # Debug specific test
 pnpm exec playwright test --debug unite-pdf-happy-path.spec.ts
@@ -239,22 +267,25 @@ pnpm exec playwright test --trace on
 ## Key Assertions
 
 ### Upload Phase
+
 ```typescript
 expect(await helpers.getPdfCount()).toBe(3);
 expect(await helpers.hasPreviews()).toBe(true);
-expect(await helpers.getPageCountForPdf(0)).toBe('3 pages');
+expect(await helpers.getPageCountForPdf(0)).toBe("3 pages");
 ```
 
 ### Duplex Phase
+
 ```typescript
 const summary = await helpers.getSummary();
-expect(summary.totalPages).toBe('12');
-expect(summary.duplexMode).toContain('Enabled');
+expect(summary.totalPages).toBe("12");
+expect(summary.duplexMode).toContain("Enabled");
 ```
 
 ### Merge Phase
+
 ```typescript
-await expect(page.locator('text=Merging PDFs...')).toBeVisible();
+await expect(page.locator("text=Merging PDFs...")).toBeVisible();
 const download = await downloadPromise;
 expect(verifyDownloadFilename(download.suggestedFilename())).toBe(true);
 ```
@@ -264,21 +295,25 @@ expect(verifyDownloadFilename(download.suggestedFilename())).toBe(true);
 ## Troubleshooting
 
 ### Tests Timing Out
+
 - Increase timeout in playwright.config.ts
 - Add better wait conditions
 - Check if dev server is running
 
 ### Previews Not Loading
+
 - Verify test PDFs exist in fixtures directory
 - Check browser console for errors
 - Ensure sufficient timeout for preview generation
 
 ### Download Not Working
+
 - Ensure download listener is setup before clicking merge
 - Check browser permissions
 - Verify download path is writable
 
 ### Flaky Tests
+
 - Add proper waits (avoid fixed timeouts)
 - Ensure test isolation (each test independent)
 - Check for race conditions
@@ -288,7 +323,9 @@ expect(verifyDownloadFilename(download.suggestedFilename())).toBe(true);
 ## CI/CD Integration
 
 ### GitHub Actions
+
 Add `.github/workflows/e2e-tests.yml`:
+
 ```yaml
 name: E2E Tests
 on: [push, pull_request]
@@ -377,9 +414,10 @@ pnpm exec playwright show-trace trace.zip
 ## Contact & Support
 
 For questions or issues with test implementation:
+
 1. Review the comprehensive guides in this directory
 2. Check Playwright documentation
-3. Review application source code in `/Users/yasithranusha/Developer/proj-pdf/src/`
+3. Review application source code in `src/`
 
 ---
 
