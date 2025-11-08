@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/Header";
 import { PdfUploader } from "@/components/PdfUploader";
@@ -136,8 +137,9 @@ function App() {
   };
 
   return (
-    <TooltipProvider>
-      <div className="min-h-screen">
+    <ThemeProvider defaultTheme="system" storageKey="unitepdf-theme">
+      <TooltipProvider>
+        <div className="min-h-screen">
         {/* Header with GitHub Link */}
         <Header />
 
@@ -373,7 +375,8 @@ function App() {
           </section>
         </div>
       </div>
-    </TooltipProvider>
+      </TooltipProvider>
+    </ThemeProvider>
   );
 }
 

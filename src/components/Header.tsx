@@ -1,6 +1,7 @@
 import { Github } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { LogoIcon } from "@/components/Logo";
+import { ThemeToggle } from "@/components/ThemeToggle";
 
 export function Header() {
   return (
@@ -17,23 +18,26 @@ export function Header() {
           </div>
         </div>
 
-        {/* GitHub Link */}
-        <Button
-          variant="ghost"
-          size="sm"
-          asChild
-          className="gap-2 hover:bg-primary/10"
-        >
-          <a
-            href="https://github.com/yasithranusha/unitepdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            aria-label="View source code on GitHub"
+        {/* Theme Toggle and GitHub Link */}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <Button
+            variant="ghost"
+            size="sm"
+            asChild
+            className="gap-2 hover:bg-primary/10"
           >
-            <Github className="h-5 w-5" />
-            <span className="hidden sm:inline">View on GitHub</span>
-          </a>
-        </Button>
+            <a
+              href="https://github.com/yasithranusha/unitepdf"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="View source code on GitHub"
+            >
+              <Github className="h-5 w-5" />
+              <span className="hidden sm:inline">View on GitHub</span>
+            </a>
+          </Button>
+        </div>
       </div>
     </header>
   );

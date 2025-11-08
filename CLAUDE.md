@@ -10,12 +10,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 1. **PDF Merging**: Combine multiple PDF files into one output file
 2. **Duplex Printing Support**: Automatically adds blank pages to PDFs with odd page counts to ensure proper duplex (double-sided) printing
-3. **PDF Previews**: View the first page of each PDF before merging with thumbnail previews
-4. **Page Count Tracking**: See individual page counts for each PDF and total pages (adjusted for duplex mode)
-5. **File Size Information**: Track individual file sizes, total size, and merged PDF size
-6. **Drag-and-Drop Reordering**: Rearrange PDFs in your desired sequence
-7. **Browser-based**: No server-side processing required - all PDF operations happen in the browser
-8. **SEO Optimized**: Comprehensive meta tags and structured data for search engine visibility
+3. **PDF Compression**: Optional compression with three levels (Extreme, Recommended, Light) to reduce file size
+4. **PDF Previews**: View the first page of each PDF before merging with thumbnail previews
+5. **Page Count Tracking**: See individual page counts for each PDF and total pages (adjusted for duplex mode)
+6. **File Size Information**: Track individual file sizes, total size, and merged PDF size with compression savings
+7. **Drag-and-Drop Reordering**: Rearrange PDFs in your desired sequence
+8. **Dark Mode**: Full dark mode support using shadcn/ui theme provider with system preference detection
+9. **Browser-based**: No server-side processing required - all PDF operations happen in the browser
+10. **SEO Optimized**: Comprehensive meta tags and structured data for search engine visibility
 
 ### Development Philosophy
 
@@ -278,36 +280,41 @@ scripts/
 ```
 src/
 ├── components/
-│   ├── ui/                  # shadcn/ui components (button, card, badge, etc.)
-│   ├── Header.tsx           # Application header with GitHub link
+│   ├── ui/                  # shadcn/ui components (button, card, badge, dropdown, etc.)
+│   ├── Header.tsx           # Application header with GitHub link and theme toggle
+│   ├── ThemeToggle.tsx      # Dark mode toggle with dropdown menu (Light/Dark/System)
+│   ├── theme-provider.tsx   # Theme provider using official shadcn/ui pattern
 │   ├── PdfUploader.tsx      # Component for uploading PDFs with drag-and-drop
 │   ├── PdfFileGrid.tsx      # Grid display with previews, page counts, drag-to-reorder
 │   ├── DuplexToggle.tsx     # Toggle for duplex printing mode
+│   ├── CompressionToggle.tsx # Toggle for PDF compression with level selection
 │   └── MergeButton.tsx      # Button with progress indicator
 ├── lib/
 │   ├── utils.ts             # General utilities (cn, etc.)
-│   ├── pdfUtils.ts          # PDF manipulation utilities (merge, download)
+│   ├── pdfUtils.ts          # PDF manipulation utilities (merge, download, compression)
 │   └── pdfPreview.ts        # PDF preview generation using pdfjs-dist
 └── App.tsx                  # Main application with state management
 
 tests/
-├── unit/                    # Unit tests for utilities
+├── unit/                    # Unit tests for utilities (78 tests)
 │   ├── pdfUtils.test.ts
 │   ├── utils.test.ts
 │   ├── PdfUploader.test.tsx
 │   ├── PdfFileList.test.tsx
 │   ├── DuplexToggle.test.tsx
+│   ├── CompressionToggle.test.tsx
 │   └── MergeButton.test.tsx
 ├── browser/                 # Vitest browser mode tests
 │   └── button.browser.test.tsx
-├── e2e/                     # Playwright E2E tests
+├── e2e/                     # Playwright E2E tests (14 tests)
 │   ├── README.md
 │   ├── TESTPLAN.md
 │   ├── TEST_SCENARIOS.md
 │   ├── PLAYWRIGHT_IMPLEMENTATION_GUIDE.md
 │   ├── TEST_FLOW_DIAGRAMS.md
 │   ├── unite-pdf-happy-path.spec.ts
-│   └── duplex-mode-calculations.spec.ts
+│   ├── duplex-mode-calculations.spec.ts
+│   └── dark-mode.spec.ts    # Dark mode feature tests (10 tests)
 ├── fixtures/                # Test PDF files
 │   ├── 1-page.pdf
 │   ├── 2-pages.pdf
@@ -370,6 +377,19 @@ This project uses Tailwind CSS v4 (installed as `@tailwindcss/vite` plugin). Key
 - No `tailwind.config.js` file (configured via CSS)
 - Uses Vite plugin for integration
 - Global styles in `src/index.css`
+- Custom theme with blue/purple color palette
+- Dark mode support via `.dark` class on `<html>` element
+
+### Dark Mode Implementation
+
+Dark mode follows the official shadcn/ui pattern:
+- **Theme Provider**: `src/components/theme-provider.tsx` using React Context
+- **Theme Toggle**: Dropdown menu with Light/Dark/System options
+- **Storage**: User preference saved in localStorage as `unitepdf-theme`
+- **System Detection**: Automatically detects OS dark mode preference
+- **CSS Variables**: Custom dark mode colors defined in `src/index.css`
+- **Class Strategy**: Applies `dark` class to `<html>` element
+- **Color Palette**: Deep blue/purple theme matching the app's design
 
 ### ESLint Configuration
 
@@ -438,11 +458,12 @@ The project includes a comprehensive CI/CD workflow that runs on every push and 
 7. Upload test reports as artifacts
 
 **Test Coverage:**
-- ✅ 55 unit tests (components and utilities)
-- ✅ 4 E2E tests (happy path + duplex calculations)
+- ✅ 78 unit tests (components and utilities)
+- ✅ 14 E2E tests (happy path + duplex calculations + dark mode)
 - ✅ Runs on Ubuntu latest
 - ✅ 60-minute timeout
 - ✅ Chromium-only for fast CI execution
+- ✅ Artifacts uploaded with unique run IDs
 
 ### Running Tests Locally
 

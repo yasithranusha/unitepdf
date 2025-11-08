@@ -14,10 +14,12 @@ Merge PDF files for duplex printing with this modern, browser-based PDF merging 
 
 - 🔄 **Merge Multiple PDFs**: Combine multiple PDF files into one document
 - 📄 **Duplex Printing Support**: Automatically add blank pages to PDFs with odd page counts for proper double-sided printing
+- 🗜️ **PDF Compression**: Optional compression with three levels (Extreme, Recommended, Light) to reduce file size
 - 🖼️ **PDF Previews**: View thumbnails of the first page of each PDF before merging
 - 📊 **Page Count Tracking**: See individual and total page counts, automatically adjusted for duplex mode
-- 💾 **File Size Information**: Track individual file sizes, total size before merge, and final merged PDF size
+- 💾 **File Size Information**: Track individual file sizes, total size before merge, and final merged PDF size with compression savings
 - 🎯 **Drag-and-Drop Reordering**: Easily rearrange PDFs in your desired sequence
+- 🌙 **Dark Mode**: Full dark mode support with Light/Dark/System preference options
 - 🌐 **100% Browser-Based**: All processing happens in your browser - no server uploads required
 - 🎨 **Modern UI**: Built with React and Tailwind CSS for a clean, responsive interface
 - 🔒 **Privacy-First**: Your files never leave your device
@@ -127,30 +129,35 @@ node scripts/generate-test-pdfs.js
 ```
 src/
 ├── components/          # React components
-│   ├── ui/             # shadcn/ui components (button, card, badge, etc.)
-│   ├── Header.tsx      # App header with GitHub link
+│   ├── ui/             # shadcn/ui components (button, card, badge, dropdown, etc.)
+│   ├── Header.tsx      # App header with GitHub link and theme toggle
+│   ├── ThemeToggle.tsx # Dark mode toggle with dropdown menu
+│   ├── theme-provider.tsx # Theme provider for dark mode
 │   ├── PdfUploader.tsx # PDF upload with drag-and-drop
 │   ├── PdfFileGrid.tsx # Grid with previews and reordering
 │   ├── DuplexToggle.tsx # Duplex mode toggle
+│   ├── CompressionToggle.tsx # PDF compression toggle
 │   └── MergeButton.tsx  # Merge button with progress
 ├── lib/                # Utility functions
 │   ├── utils.ts        # General utilities
-│   ├── pdfUtils.ts     # PDF manipulation (merge, download)
+│   ├── pdfUtils.ts     # PDF manipulation (merge, download, compression)
 │   └── pdfPreview.ts   # PDF preview generation
 ├── App.tsx             # Main app with state management
-└── index.css           # Global styles and theme
+└── index.css           # Global styles and theme (including dark mode)
 
 tests/
-├── unit/               # Unit tests (55 tests)
+├── unit/               # Unit tests (78 tests)
 │   ├── pdfUtils.test.ts
 │   ├── PdfUploader.test.tsx
 │   ├── DuplexToggle.test.tsx
+│   ├── CompressionToggle.test.tsx
 │   └── MergeButton.test.tsx
 ├── browser/            # Vitest browser tests
 │   └── button.browser.test.tsx
-├── e2e/               # Playwright E2E tests (4 tests)
+├── e2e/               # Playwright E2E tests (14 tests)
 │   ├── unite-pdf-happy-path.spec.ts
 │   ├── duplex-mode-calculations.spec.ts
+│   ├── dark-mode.spec.ts
 │   ├── README.md
 │   ├── TESTPLAN.md
 │   └── TEST_SCENARIOS.md
@@ -313,8 +320,10 @@ We welcome contributions! Please follow these guidelines:
 - [x] SEO optimization
 - [x] Comprehensive E2E testing
 - [x] GitHub Actions CI/CD
-- [ ] Dark mode support
-- [x] PDF compression options
+- [x] Dark mode support with system preference detection
+- [x] PDF compression options (Extreme, Recommended, Light)
+- [ ] Internationalization (i18n) support
+- [ ] PWA support for offline usage
 
 ## License
 
