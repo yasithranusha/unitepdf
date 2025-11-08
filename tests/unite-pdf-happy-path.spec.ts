@@ -58,7 +58,7 @@ test.describe('Complete Happy Path Flow', () => {
     await expect(page.getByText('Total pages:').locator('..').getByText('10')).toBeVisible();
 
     // 17. Verify "Duplex mode" is shown as disabled
-    await expect(page.getByText('✗ Disabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✗ Disabled')).toBeVisible();
 
     // 18. Click the duplex mode toggle to enable it
     await page.getByRole('switch', { name: 'Enable duplex printing mode' }).click();
@@ -67,19 +67,19 @@ test.describe('Complete Happy Path Flow', () => {
     await expect(page.getByText('Total pages:').locator('..').getByText('12')).toBeVisible();
 
     // 20. Verify "Duplex mode" is shown as enabled
-    await expect(page.getByText('✓ Enabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✓ Enabled')).toBeVisible();
 
-    // 21. Click the "Merge PDFs" button
+    // 21. Click the "Continue" button to start merging PDFs
+    await page.getByRole('button', { name: /Continue/ }).click();
+
+    // 22. Wait for the merge to complete - "Download Merged PDF" button appears
+    await expect(page.getByRole('button', { name: 'Download Merged PDF' })).toBeVisible({ timeout: 30000 });
+
+    // 23. Click the "Download Merged PDF" button
     const downloadPromise = page.waitForEvent('download');
-    await page.getByRole('button', { name: /Merge \d+ PDF/ }).click();
+    await page.getByRole('button', { name: 'Download Merged PDF' }).click();
 
-    // 22. Wait for the merge to complete (progress reaches 100%)
-    await expect(page.getByText('100%', { exact: true })).toBeVisible({ timeout: 30000 });
-
-    // 23. Wait for the download to trigger
+    // 24. Wait for the download to complete
     await downloadPromise;
-
-    // 24. Verify the merged PDF size is displayed in the summary
-    await expect(page.getByText(/Total size:/).locator('..')).toContainText(/[0-9.]+ (KB|MB)/);
   });
 });

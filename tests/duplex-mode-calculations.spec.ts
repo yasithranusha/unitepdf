@@ -40,21 +40,21 @@ test.describe('Duplex Mode Calculations', () => {
 
     // Verify 11 pages total with duplex (3+1 blank + 2 + 5 no blank = 11)
     await expect(page.getByText('Total pages:').locator('..').getByText('11')).toBeVisible();
-    await expect(page.getByText('✓ Enabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✓ Enabled')).toBeVisible();
 
     // Disable duplex mode
     await page.getByRole('switch', { name: 'Enable duplex printing mode' }).click();
 
     // Verify back to 10 pages
     await expect(page.getByText('Total pages:').locator('..').getByText('10')).toBeVisible();
-    await expect(page.getByText('✗ Disabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✗ Disabled')).toBeVisible();
 
     // Enable duplex mode again
     await page.getByRole('switch', { name: 'Enable duplex printing mode' }).click();
 
     // Verify 11 pages again
     await expect(page.getByText('Total pages:').locator('..').getByText('11')).toBeVisible();
-    await expect(page.getByText('✓ Enabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✓ Enabled')).toBeVisible();
   });
 
   test('Test Scenario 2: All Odd Pages', async ({ page }) => {
@@ -96,7 +96,7 @@ test.describe('Duplex Mode Calculations', () => {
 
     // Verify 11 pages total with duplex (1+1 blank + 3+1 blank + 5 no blank = 11)
     await expect(page.getByText('Total pages:').locator('..').getByText('11')).toBeVisible();
-    await expect(page.getByText('✓ Enabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✓ Enabled')).toBeVisible();
   });
 
   test('Test Scenario 3: All Even Pages', async ({ page }) => {
@@ -128,13 +128,13 @@ test.describe('Duplex Mode Calculations', () => {
 
     // Verify still 12 pages (no blank pages added for even PDFs)
     await expect(page.getByText('Total pages:').locator('..').getByText('12')).toBeVisible();
-    await expect(page.getByText('✓ Enabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✓ Enabled')).toBeVisible();
 
     // Disable duplex mode
     await page.getByRole('switch', { name: 'Enable duplex printing mode' }).click();
 
     // Verify still 12 pages
     await expect(page.getByText('Total pages:').locator('..').getByText('12')).toBeVisible();
-    await expect(page.getByText('✗ Disabled')).toBeVisible();
+    await expect(page.getByText('Duplex mode:').locator('..').getByText('✗ Disabled')).toBeVisible();
   });
 });
