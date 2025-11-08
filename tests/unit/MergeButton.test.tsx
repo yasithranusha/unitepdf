@@ -7,21 +7,21 @@ describe("MergeButton Component - Core Functionality", () => {
   it("should render merge button", () => {
     const { getByRole } = render(<MergeButton fileCount={2} onMerge={vi.fn()} />);
 
-    const button = getByRole("button", { name: /merge/i });
+    const button = getByRole("button", { name: /continue/i });
     expect(button).toBeInTheDocument();
   });
 
   it("should be disabled when no files are selected", () => {
     const { getByRole } = render(<MergeButton fileCount={0} onMerge={vi.fn()} />);
 
-    const button = getByRole("button", { name: /merge/i });
+    const button = getByRole("button", { name: /continue/i });
     expect(button).toBeDisabled();
   });
 
   it("should be enabled when files are selected", () => {
     const { getByRole } = render(<MergeButton fileCount={3} onMerge={vi.fn()} />);
 
-    const button = getByRole("button", { name: /merge/i });
+    const button = getByRole("button", { name: /continue/i });
     expect(button).not.toBeDisabled();
   });
 
@@ -30,19 +30,20 @@ describe("MergeButton Component - Core Functionality", () => {
     const mockOnMerge = vi.fn();
     const { getByRole } = render(<MergeButton fileCount={2} onMerge={mockOnMerge} />);
 
-    const button = getByRole("button", { name: /merge/i });
+    const button = getByRole("button", { name: /continue/i });
     await user.click(button);
 
     expect(mockOnMerge).toHaveBeenCalledTimes(1);
   });
 
   it("should show loading state when merging", () => {
-    const { getByRole, getByText } = render(
+    const { getByRole, getAllByText, getByText } = render(
       <MergeButton fileCount={2} onMerge={vi.fn()} isLoading={true} progress={45} />
     );
 
-    // Button should show "Merging PDFs..." text
-    expect(getByText(/merging pdfs/i)).toBeInTheDocument();
+    // Button should show "Processing..." text (appears twice: button and progress section)
+    const processingTexts = getAllByText(/processing/i);
+    expect(processingTexts.length).toBeGreaterThan(0);
 
     // Should show progress percentage
     expect(getByText(/45%/i)).toBeInTheDocument();
@@ -55,13 +56,13 @@ describe("MergeButton Component - Core Functionality", () => {
 
     const button = getByRole("button");
     expect(button).toBeDisabled();
-    expect(button).toHaveTextContent(/merging/i);
+    expect(button).toHaveTextContent(/processing/i);
   });
 
-  it("should show file count in button text", () => {
+  it("should show continue text in button", () => {
     const { getByRole } = render(<MergeButton fileCount={5} onMerge={vi.fn()} />);
 
-    const button = getByRole("button", { name: /5.*pdf/i });
+    const button = getByRole("button", { name: /continue/i });
     expect(button).toBeInTheDocument();
   });
 });

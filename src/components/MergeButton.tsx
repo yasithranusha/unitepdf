@@ -24,7 +24,7 @@ export function MergeButton({ fileCount, onMerge, isLoading = false, progress = 
           "w-full text-base font-semibold relative overflow-hidden group shadow-lg transition-all",
           !isDisabled && "btn-glow bg-gradient-to-r from-primary to-primary/90 hover:shadow-xl hover:shadow-primary/50 hover:scale-[1.02]"
         )}
-        aria-label={isLoading ? "Merging PDFs in progress" : `Merge ${fileCount} PDF${fileCount !== 1 ? "s" : ""}`}
+        aria-label={isLoading ? "Processing PDFs" : "Continue to merge PDFs"}
       >
         {/* Animated gradient background on hover */}
         {!isDisabled && (
@@ -35,12 +35,12 @@ export function MergeButton({ fileCount, onMerge, isLoading = false, progress = 
           {isLoading ? (
             <>
               <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-              Merging PDFs...
+              Processing...
             </>
           ) : (
             <>
               <FileDown className="mr-2 h-5 w-5" />
-              Merge {fileCount} PDF{fileCount !== 1 ? "s" : ""}
+              Continue
             </>
           )}
         </span>

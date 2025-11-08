@@ -42,15 +42,18 @@ test-results/
 playwright/.auth/
 .playwright-mcp/
 
-# Screenshot test outputs (all screenshots ignored - generated locally/CI)
-*.png
+# Screenshot test outputs (ignore test output, but keep baselines)
 *-actual.png
 *-diff.png
 tests/**/__diff_output__/
 tests/**/__screenshots__/
+tests/screenshots/
+test-results/**/*.png
+playwright-report/**/*.png
 
 # Vitest browser mode cache
 .vitest/
 
-# Keep test fixtures
+# Keep test fixtures and visual baselines
 !tests/fixtures/*.pdf
+!tests/visual/**/*-snapshots/*.png
