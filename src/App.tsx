@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import { ThemeProvider } from "@/components/theme-provider";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { Header } from "@/components/Header";
@@ -376,6 +377,7 @@ function App() {
         </div>
       </div>
       </TooltipProvider>
+      <SpeedInsights />
     </ThemeProvider>
   );
 }
