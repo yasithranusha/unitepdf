@@ -1,20 +1,28 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
-
 version: 2
 updates:
-  # Maintain dependencies for GitHub Actions (like actions/checkout@v4)
+  # Maintain dependencies for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
 
-  # Maintain npm/pnpm dependencies (Dependabot detects pnpm-lock.yaml automatically)
+  # Maintain npm/pnpm dependencies
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
-    # Increase open pull requests limit
-    open-pull-requests-limit: 10
+    # Limits the number of open PRs to prevent being overwhelmed
+    open-pull-requests-limit: 5
+    
+    # Groups related updates to reduce PR noise
+    groups:
+      react:
+        patterns: ["react*", "@types/react*"]
+      testing:
+        patterns: ["vitest*", "playwright*", "@playwright/*", "@testing-library/*", "jsdom"]
+      tailwind:
+        patterns: ["tailwindcss*", "@tailwindcss/*", "tailwind-merge"]
+      linting:
+        patterns: ["eslint*", "typescript-eslint*", "globals"]
+      types:
+        patterns: ["@types/*"]
