@@ -1,0 +1,28 @@
+version: 2
+updates:
+  # Maintain dependencies for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+
+  # Maintain npm/pnpm dependencies
+  - package-ecosystem: "npm"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Limits the number of open PRs to prevent being overwhelmed
+    open-pull-requests-limit: 5
+    
+    # Groups related updates to reduce PR noise
+    groups:
+      react:
+        patterns: ["react*", "@types/react*"]
+      testing:
+        patterns: ["vitest*", "playwright*", "@playwright/*", "@testing-library/*", "jsdom"]
+      tailwind:
+        patterns: ["tailwindcss*", "@tailwindcss/*", "tailwind-merge"]
+      linting:
+        patterns: ["eslint*", "typescript-eslint*", "globals"]
+      types:
+        patterns: ["@types/*"]
