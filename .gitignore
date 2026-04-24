@@ -57,3 +57,4 @@ playwright-report/**/*.png
 # Keep test fixtures and visual baselines
 !tests/fixtures/*.pdf
 !tests/visual/**/*-snapshots/*.png
+package-lock.json
